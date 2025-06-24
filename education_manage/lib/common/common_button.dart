@@ -2,27 +2,29 @@ import 'package:flutter/material.dart';
 
 /// CommonButton
 class CommonButton extends StatelessWidget {
-  final String text;
+  final String? text;
   final Function()? onClick;
   final Color? color;
   final bool isDisabled;
   final Color? textColor;
   final BoxBorder? border;
+  final Widget? widgetButton;
 
   /// constructor
   const CommonButton({
     super.key,
-    required this.text,
+    this.text,
     this.onClick,
     this.color,
     this.isDisabled = false,
     this.textColor,
     this.border,
+    this.widgetButton,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: isDisabled ? null : onClick,
       child: Container(
         width: double.infinity,
@@ -35,15 +37,16 @@ class CommonButton extends StatelessWidget {
           horizontal: 20,
           vertical: 14,
         ),
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: textColor ?? Colors.white,
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
+        child: widgetButton ??
+            Text(
+              text ?? '',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: textColor ?? Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
       ),
     );
   }
