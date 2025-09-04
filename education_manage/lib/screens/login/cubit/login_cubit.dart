@@ -1,24 +1,31 @@
+import 'package:education_manage/networking/dto/request/login_request.dart';
+import 'package:education_manage/networking/reponsitory/user_reponsitory_impl.dart';
+import 'package:education_manage/utils/hive_manage.dart';
 import 'package:education_manage/utils/navigation_service.dart';
 import 'package:education_manage/utils/routes.dart';
+import 'package:education_manage/utils/shared_preference_manage.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  LoginCubit() : super(LoginInitialState()) {
-    // email = '';
-    // password = '';
+  LoginCubit(this._userRepository) : super(LoginInitialState()) {
+    email = '';
+    password = '';
   }
+  final UserRepository _userRepository;
 
-  // late String email;
-  // late String password;
+  late String email;
+  late String password;
 
   void updateEmail(String email) {
+    email = email.trim();
     emit(state.copyWith(email: email, checkEmail: true));
   }
 
   void updatePassword(String password) {
+    password = password.trim();
     emit(state.copyWith(password: password, checkPassword: true));
   }
 
@@ -26,7 +33,17 @@ class LoginCubit extends Cubit<LoginState> {
     emit(state.copyWith(visiblePassword: !state.visiblePassword));
   }
 
-  void handleLogin() {
+  Future<void> getUserProfile(int userId) async {
+    try {
+      final user = await _userRepository.getUserProfile(userId);
+      saveUserModel(model: user.data);
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+
+  }
+
+  void handleLogin() async {
     if (state.email.isEmpty && state.password.isEmpty) {
       emit(state.copyWith(checkPassword: false, checkEmail: false));
     } else if (state.email.isEmpty) {
@@ -34,7 +51,21 @@ class LoginCubit extends Cubit<LoginState> {
     } else if (state.password.isEmpty) {
       emit(state.copyWith(checkPassword: false));
     } else {
-      navService.pushNamedAndRemoveUntil(Routes.bottomNavigation);
+      final response = await _userRepository.login(
+        LoginRequest(
+          phoneNumber: state.email,
+          password: state.password,
+        ),
+      );
+      final userId = response.data?.userDTO?.id ?? 0;
+      await getUserProfile(userId);
+      final token = response.data?.accessToken;
+      if (token != null) {
+        saveAccessToken(token);
+      }
+      if (response.code == 1000) {
+        navService.pushNamedAndRemoveUntil(Routes.bottomNavigation);
+      }
     }
   }
 }

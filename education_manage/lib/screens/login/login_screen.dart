@@ -6,13 +6,16 @@ import 'package:education_manage/screens/register/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../networking/reponsitory/user_reponsitory_impl.dart';
+
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => LoginCubit(),
+      create: (context) =>
+          LoginCubit(RepositoryProvider.of<UserRepository>(context)),
       child: const Body(),
     );
   }
