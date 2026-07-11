@@ -12,5 +12,5 @@ Future<String> getAccessToken() async {
 
 void removeToken() async {
   final pref = await SharedPreferences.getInstance();
-  await pref.setString('token', '');
+  await pref.remove('token');
 }

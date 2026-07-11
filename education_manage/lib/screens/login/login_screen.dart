@@ -6,7 +6,7 @@ import 'package:education_manage/screens/register/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../networking/reponsitory/user_reponsitory_impl.dart';
+import '../../networking/repository/user_repository_impl.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});

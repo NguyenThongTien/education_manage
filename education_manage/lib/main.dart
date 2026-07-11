@@ -1,7 +1,6 @@
 import 'package:education_manage/utils/app.dart';
 import 'package:education_manage/utils/configs.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // void main() {
 //   runApp(const MyApp());

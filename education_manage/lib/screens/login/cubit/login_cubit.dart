@@ -1,5 +1,5 @@
 import 'package:education_manage/networking/dto/request/login_request.dart';
-import 'package:education_manage/networking/reponsitory/user_reponsitory_impl.dart';
+import 'package:education_manage/networking/repository/user_repository_impl.dart';
 import 'package:education_manage/utils/hive_manage.dart';
 import 'package:education_manage/utils/navigation_service.dart';
 import 'package:education_manage/utils/routes.dart';
@@ -58,11 +58,11 @@ class LoginCubit extends Cubit<LoginState> {
         ),
       );
       final userId = response.data?.userDTO?.id ?? 0;
-      await getUserProfile(userId);
       final token = response.data?.accessToken;
       if (token != null) {
         saveAccessToken(token);
       }
+      await getUserProfile(userId);
       if (response.code == 1000) {
         navService.pushNamedAndRemoveUntil(Routes.bottomNavigation);
       }

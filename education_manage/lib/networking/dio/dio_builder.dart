@@ -51,7 +51,8 @@ class DioBuilder extends DioMixin implements Dio {
     // interceptors.add(DioCacheManager(cacheConfig).interceptor as InterceptorsWrapper);
 
     if (kDebugMode) {
-      interceptors.add(PrettyDioLogger(requestBody: true, requestHeader: true, request: true));
+      interceptors.add(PrettyDioLogger(
+          requestBody: true, requestHeader: true, request: true));
     }
 
     // Add default user agent
@@ -78,10 +79,10 @@ class HeaderInterceptor extends Interceptor {
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
     final token = await getAccessToken();
-    debugPrint('token $token');
-    options.headers.addAll({'Authorization': 'Bearer $token'});
-
-    super.onRequest(options, handler);
+    if (token.isNotEmpty) {
+      options.headers.addAll({'Authorization': 'Bearer $token'});
+    }
+    return handler.next(options);
   }
 
   @override
@@ -118,27 +119,27 @@ class HeaderInterceptor extends Interceptor {
         }
         break;
 
-    //   case 401:
-    //     hideLoading();
-    //     await failToast('許可されていません');
-    //     removeToken();
-    //     await navService.pushNamedAndRemoveUntil(Routes.loginScreen);
-    //     break;
-    //   case 403:
-    //     await failToast('許可されていません');
-    //     break;
-    //   case 404:
-    //     await failToast('サーバーと接続できませんでした。');
-    //     break;
-    //   case 405:
-    //     await failToast('サーバーと接続できませんでした。');
-    //     break;
-    //   case 500:
-    //     await failToast('問題が発生しました');
-    //     break;
-    //   default:
-    //     await failToast('問題が発生しました');
-    //     break;
+      //   case 401:
+      //     hideLoading();
+      //     await failToast('許可されていません');
+      //     removeToken();
+      //     await navService.pushNamedAndRemoveUntil(Routes.loginScreen);
+      //     break;
+      //   case 403:
+      //     await failToast('許可されていません');
+      //     break;
+      //   case 404:
+      //     await failToast('サーバーと接続できませんでした。');
+      //     break;
+      //   case 405:
+      //     await failToast('サーバーと接続できませんでした。');
+      //     break;
+      //   case 500:
+      //     await failToast('問題が発生しました');
+      //     break;
+      //   default:
+      //     await failToast('問題が発生しました');
+      //     break;
     }
     return super.onError(err, handler);
   }
