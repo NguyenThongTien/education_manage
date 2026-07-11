@@ -1,6 +1,11 @@
+import 'package:education_manage/common/common_dialog.dart';
 import 'package:education_manage/common/custom_image.dart';
 import 'package:education_manage/common/list_title.dart';
+import 'package:education_manage/networking/repository/user_repository_impl.dart';
 import 'package:education_manage/screens/profile_screen.dart/cubit/profile_cubit.dart';
+import 'package:education_manage/utils/navigation_service.dart';
+import 'package:education_manage/utils/routes.dart';
+import 'package:education_manage/utils/shared_preference_manage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,7 +15,8 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ProfileCubit(),
+      create: (context) =>
+          ProfileCubit(RepositoryProvider.of<UserRepository>(context)),
       child: const Body(),
     );
   }
@@ -63,8 +69,7 @@ class _BodyState extends State<Body> {
                         icon: Icon(Icons.info_outline),
                         title: 'Thông tin cá nhân',
                         onPress: () {
-                          // Navigator.of(context).push(MaterialPageRoute(
-                          //     builder: (_) => const LanguageScreen()));
+                          navService.pushNamed(Routes.personalInformationScreen);
                         },
                         training: const Icon(
                           Icons.navigate_next_outlined,
@@ -107,10 +112,20 @@ class _BodyState extends State<Body> {
                         height: 16,
                       ),
                       AppListTitle(
-                        icon: Icon(Icons.logout_outlined),
+                        icon: const Icon(Icons.logout_outlined),
                         title: 'Đăng xuất',
                         onPress: () {
-                          // _bottomSheet();
+                          showCommonDialog(context,
+                              title: 'Thông báo',
+                              message: 'Bạn có chắc chắn muốn đăng xuất ?',
+                              textAccept: 'Đồng ý',
+                              textReject: 'Hủy',
+                              confirmPress: (BuildContext dialogContext) async {
+                            final token = await getAccessToken();
+                            context.read<ProfileCubit>().logout(token);
+                          }, confirmPressReject: (BuildContext dialogContext) {
+                            Navigator.of(context).pop();
+                          }, closeDialog: true);
                         },
                         training: const Icon(
                           Icons.navigate_next_outlined,

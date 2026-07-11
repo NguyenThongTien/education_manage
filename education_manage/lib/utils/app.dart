@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:education_manage/networking/api/education_manage_api.dart';
 import 'package:education_manage/networking/dio/dio_builder.dart';
-import 'package:education_manage/networking/reponsitory/user_reponsitory_impl.dart';
+import 'package:education_manage/networking/repository/subject_repository_impl.dart';
+import 'package:education_manage/networking/repository/user_repository_impl.dart';
 import 'package:education_manage/utils/configs.dart';
 import 'package:education_manage/utils/log_screen_name.dart';
 import 'package:education_manage/utils/routes.dart';
@@ -11,7 +12,7 @@ import 'package:loader_overlay/loader_overlay.dart';
 import '../../utils/navigation_service.dart';
 
 class Application extends StatefulWidget {
-  factory Application.product({String initialRoute = Routes.loginScreen}) =>
+  factory Application.product({String initialRoute = Routes.splashScreen}) =>
       Application._(initialRoute: initialRoute);
 
   const Application._({
@@ -74,9 +75,9 @@ class ApplicationState extends State<Application> {
           RepositoryProvider<UserRepository>(
             create: (context) => UserRepositoryImpl(educationManageApi),
           ),
-          // RepositoryProvider<CustomerRepository>(
-          //   create: (context) => CustomerRepositoryImpl(ikemenApi),
-          // ),
+          RepositoryProvider<SubjectRepository>(
+            create: (context) => SubjectRepositoryImpl(educationManageApi),
+          ),
           // RepositoryProvider<DesignRepository>(
           //   create: (context) => DesignRepositoryImpl(aiApi, ikemenApi),
           // ),

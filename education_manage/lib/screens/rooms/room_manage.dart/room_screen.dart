@@ -37,7 +37,7 @@ class _BodyState extends State<Body> {
           ],
         ),
           const SizedBox(height: 16),
-          Container(
+          SizedBox(
             height: getMediaQuerySize().height * 0.2,
             child: ListView.builder(
               itemBuilder: (context, index) {
